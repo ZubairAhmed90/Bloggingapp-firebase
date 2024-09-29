@@ -10,13 +10,13 @@ import Register from './pages/Register.jsx';
 import Home from './pages/Home.jsx';
 import ProtectedRoutes from './components/ProtectedRoutes.jsx';
 import BlogDetails from './Pages/BlogDetails.jsx';
-import ErrorPage from './Pages/errrorpage.jsx'; // Import the ErrorPage component
+import ErrorPage from './Pages/errrorpage.jsx'; 
 
 const router = createBrowserRouter([
   {
     path: '',
     element: <Layout />,
-    errorElement: <ErrorPage />, // Add the errorElement here
+    errorElement: <ErrorPage />, 
     children: [
       {
         path: '',

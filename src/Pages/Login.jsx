@@ -21,12 +21,11 @@ const Login = () => {
       });
       console.log(userLogin);
 
-      // Redirect to the dashboard page if login is successful
+    
       navigate('/dashboard');
 
     } catch (error) {
       console.error(error);
-      // Optionally, you could set an error message state here to display to the user
     }
   };
 

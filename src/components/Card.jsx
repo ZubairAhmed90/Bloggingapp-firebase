@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // For navigation
 
-const Card = ({ title, description, imageUrl }) => {
+const Card = ({ id, title, description, imageUrl }) => {
+  const [showMore, setShowMore] = useState(false);
+
+  const toggleShowMore = () => {
+    setShowMore(!showMore);
+  };
+
   return (
     <div style={cardStyles.container}>
       <img src={imageUrl} alt={title} style={cardStyles.image} />
       <h3 style={cardStyles.title}>{title}</h3>
-      <p style={cardStyles.description}>{description}</p>
+      <p style={cardStyles.description}>
+        {showMore ? description : `${description.substring(0, 100)}...`} 
+      </p>
+      <div style={cardStyles.buttonContainer}>
+        <button style={cardStyles.button} onClick={toggleShowMore}>
+          {showMore ? 'Show Less' : 'Show More'}
+        </button>
+        <Link to={`/BlogDetails/${id}`} style={cardStyles.learnMoreButton}>
+          Learn More
+        </Link>
+      </div>
     </div>
   );
 };
@@ -34,6 +51,26 @@ const cardStyles = {
   description: {
     color: '#6c757d',
     padding: '0 10px 10px',
+  },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '0 10px 10px',
+  },
+  button: {
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    padding: '8px 12px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+  },
+  learnMoreButton: {
+    backgroundColor: '#28a745',
+    color: '#fff',
+    padding: '8px 12px',
+    borderRadius: '5px',
+    textDecoration: 'none',
   },
 };
 
