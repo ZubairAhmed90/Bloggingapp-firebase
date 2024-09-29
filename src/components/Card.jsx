@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // For navigation
 
 const Card = ({ id, title, description, imageUrl }) => {
-  const [showMore, setShowMore] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const toggleShowMore = () => {
-    setShowMore(!showMore);
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
   return (
@@ -13,16 +13,29 @@ const Card = ({ id, title, description, imageUrl }) => {
       <img src={imageUrl} alt={title} style={cardStyles.image} />
       <h3 style={cardStyles.title}>{title}</h3>
       <p style={cardStyles.description}>
-        {showMore ? description : `${description.substring(0, 100)}...`} 
+        {description.substring(0, 100)}... 
       </p>
       <div style={cardStyles.buttonContainer}>
-        <button style={cardStyles.button} onClick={toggleShowMore}>
-          {showMore ? 'Show Less' : 'Show More'}
+        <button style={cardStyles.button} onClick={toggleModal}>
+          Show More
         </button>
         <Link to={`/BlogDetails/${id}`} style={cardStyles.learnMoreButton}>
           Learn More
         </Link>
       </div>
+
+      {/* Modal for showing full content */}
+      {isModalOpen && (
+        <div style={modalStyles.overlay}>
+          <div style={modalStyles.modal}>
+            <h2>{title}</h2>
+            <p>{description}</p>
+            <button style={modalStyles.closeButton} onClick={toggleModal}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -71,6 +84,39 @@ const cardStyles = {
     padding: '8px 12px',
     borderRadius: '5px',
     textDecoration: 'none',
+  },
+};
+
+// Styles for the modal
+const modalStyles = {
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000, // Ensures modal is on top of other content
+  },
+  modal: {
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '10px',
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
+    maxWidth: '500px',
+    width: '90%',
+  },
+  closeButton: {
+    backgroundColor: '#dc3545',
+    color: '#fff',
+    border: 'none',
+    padding: '8px 12px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginTop: '10px',
   },
 };
 

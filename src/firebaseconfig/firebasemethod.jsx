@@ -16,7 +16,6 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 const auth = getAuth(app);
@@ -84,6 +83,11 @@ const signOutUser = () => {
   });
 };
 
+// Get current user
+const getCurrentUser = () => {
+  return auth.currentUser; // Return the currently signed-in user or null
+};
+
 // Send data to Firestore
 const sendData = (obj, colName) => {
   return new Promise((resolve, reject) => {
@@ -119,7 +123,7 @@ const getAllData = async (colName) => {
   try {
     const dataArr = [];
     const querySnapshot = await getDocs(collection(db, colName));
-    
+
     querySnapshot.forEach((doc) => {
       const obj = { ...doc.data(), documentId: doc.id };
       dataArr.push(obj);
@@ -166,16 +170,17 @@ const uploadImage = async (files, email) => {
   }
 };
 
-export { 
-  auth, 
-  db, 
-  signUpUser, 
-  loginUser, 
-  signOutUser, 
-  sendData, 
-  getData, 
-  getAllData, 
-  deleteDocument, 
-  updateDocument, 
-  uploadImage 
+export {
+  auth,
+  db,
+  signUpUser,
+  loginUser,
+  signOutUser,
+  getCurrentUser, // Export the getCurrentUser function
+  sendData,
+  getData,
+  getAllData,
+  deleteDocument,
+  updateDocument,
+  uploadImage,
 };
