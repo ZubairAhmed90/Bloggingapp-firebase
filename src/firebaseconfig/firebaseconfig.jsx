@@ -1,13 +1,13 @@
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBeIKypdo8AT6eFC1iIsC6ALuo0BDw2PIo",
-  authDomain: "blogging-app-230cf.firebaseapp.com",
-  projectId: "blogging-app-230cf",
-  storageBucket: "blogging-app-230cf.appspot.com",
-  messagingSenderId: "568619264711",
-  appId: "1:568619264711:web:b0dfac3bf45ad1923d6ce2",
-  measurementId: "G-MD9W74VG7H"
+  apiKey: "AIzaSyBm5INsEXijo9_ON1Mg_IUxZwHdsa4NIJ8",
+  authDomain: "bloggingapp-73641.firebaseapp.com",
+  projectId: "bloggingapp-73641",
+  storageBucket: "bloggingapp-73641.appspot.com",
+  messagingSenderId: "649560771206",
+  appId: "1:649560771206:web:a342347303ce2d54101f07",
+  measurementId: "G-3S032MYBZT"
 };
  
 const app= initializeApp(firebaseConfig)

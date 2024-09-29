@@ -1,31 +1,34 @@
-import React from 'react'
-import { useForm } from "react-hook-form"
-import { loginUser } from '../firebaseconfig/firebasemethod'
-import { useNavigate } from 'react-router-dom'
+import React from 'react';
+import { useForm } from "react-hook-form";
+import { loginUser } from '../firebaseconfig/firebasemethod';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const loginUserFromFirebase = async (data) => {
-    console.log(data)
+    console.log(data);
     try {
       const userLogin = await loginUser({
         email: data.email,
         password: data.password
-      })
-      console.log(userLogin)
-      navigate('')
+      });
+      console.log(userLogin);
+
+      // Redirect to the dashboard page if login is successful
+      navigate('/dashboard');
 
     } catch (error) {
-      console.error(error)
+      console.error(error);
+      // Optionally, you could set an error message state here to display to the user
     }
-  }
+  };
 
   return (
     <div style={styles.container}>
@@ -38,7 +41,7 @@ const Login = () => {
           style={styles.input} 
         /><br />
         {errors.email && <span style={styles.error}>This field is required</span>}
-         <br />
+        <br />
         <input 
           type="password" 
           placeholder='Enter your password' 
@@ -46,12 +49,12 @@ const Login = () => {
           style={styles.input} 
         /><br />
         {errors.password && <span style={styles.error}>This field is required</span>}
-         <br />
+        <br />
         <button type='submit' style={styles.button}>Login</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
 const styles = {
   container: {
@@ -97,6 +100,6 @@ const styles = {
     cursor: "pointer",
     transition: "background-color 0.3s"
   }
-}
+};
 
-export default Login
+export default Login;

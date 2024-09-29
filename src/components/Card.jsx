@@ -1,52 +1,40 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React from 'react';
 
-const Card = ({ id, title, description, imageUrl,onClick }) => {
-  const navigate = useNavigate()
-
-  const handleClick = () => {
-    navigate(`/blog/${id}`)
-  }
-
+const Card = ({ title, description, imageUrl }) => {
   return (
-    <div style={styles.card} onClick={handleClick}>
-      <img src={imageUrl} alt="Blog" style={styles.image} />
-      <div style={styles.textContainer}>
-        <h2 style={styles.title}>{title}</h2>
-        <p style={styles.description}>{description}</p>
-      </div>
+    <div style={cardStyles.container}>
+      <img src={imageUrl} alt={title} style={cardStyles.image} />
+      <h3 style={cardStyles.title}>{title}</h3>
+      <p style={cardStyles.description}>{description}</p>
     </div>
-  )
-}
+  );
+};
 
-const styles = {
-  card: {
-    backgroundColor: '#fff',
+const cardStyles = {
+  container: {
+    backgroundColor: '#ffffff', // White background for the card
     borderRadius: '10px',
-    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-    marginBottom: '20px',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
     overflow: 'hidden',
-    width: '30%',
-    cursor: 'pointer',
-    transition: 'transform 0.3s ease-in-out',
+    width: '300px', // Fixed width for the card
+    minWidth: '250px', // Ensure a minimum width
+    marginBottom: '20px', // Space at the bottom of the card
+    textAlign: 'left',
+    transition: 'transform 0.2s',
   },
   image: {
     width: '100%',
-    height: '200px',
-    objectFit: 'cover',
-  },
-  textContainer: {
-    padding: '15px',
+    height: 'auto',
   },
   title: {
     fontSize: '1.5em',
-    color: '#333',
-    marginBottom: '10px',
+    color: '#343a40',
+    margin: '10px 0',
   },
   description: {
-    fontSize: '1em',
-    color: '#666',
+    color: '#6c757d',
+    padding: '0 10px 10px',
   },
-}
+};
 
-export default Card
+export default Card;

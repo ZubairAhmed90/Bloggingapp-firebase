@@ -1,14 +1,14 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React from 'react';
+import { useParams } from 'react-router-dom';
 
 const BlogDetails = ({ blogs }) => {
-  const { id } = useParams() 
+  const { id } = useParams(); 
 
-  // Convert id to a number if necessary
-  const blog = blogs.find(blog => blog.id === parseInt(id)) 
+  // Find the blog using the id from the URL
+  const blog = blogs.find(blog => blog.id === id); // No need to convert to number since we're using string IDs
 
   if (!blog) {
-    return <h2>Blog not found</h2>
+    return <h2>Blog not found</h2>;
   }
 
   return (
@@ -17,7 +17,7 @@ const BlogDetails = ({ blogs }) => {
       <h1 style={styles.title}>{blog.title}</h1>
       <p style={styles.description}>{blog.description}</p>
     </div>
-  )
+  );
 }
 
 const styles = {
@@ -42,6 +42,6 @@ const styles = {
     fontSize: '1.2em',
     color: '#666',
   },
-}
+};
 
-export default BlogDetails
+export default BlogDetails;

@@ -1,49 +1,57 @@
-import React, { useEffect, useState } from 'react'
-import { useForm } from "react-hook-form"
-import { auth, getData, sendData } from '../firebaseconfig/firebasemethod'
-import { onAuthStateChanged } from 'firebase/auth'
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { auth, getData, sendData, uploadImage } from '../firebaseconfig/firebasemethod'; // Import uploadImage
+import { onAuthStateChanged } from 'firebase/auth';
 
 const Dashboard = () => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm()
-
-  const [blogs, setBlogs] = useState([])
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const [blogs, setBlogs] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        console.log(user.uid)
-        const blogsData = await getData("blogs", user.uid)
-        console.log(blogsData)
-        setBlogs([...blogsData])
+        const blogsData = await getData("blogs", user.uid);
+        setBlogs([...blogsData]);
       }
-    })
-  }, [])
+    });
+  }, []);
 
   const sendDatatoFirestore = async (data) => {
-    console.log(data)
     try {
+      let imageUrl = '';
+      if (selectedImage) {
+        // Upload image and get the URL
+        imageUrl = await uploadImage(selectedImage, auth.currentUser.email);
+      }
+      
       const response = await sendData({
         title: data.title,
         description: data.description,
-        uid: auth.currentUser.uid
-      }, 'blogs')
-      blogs.push({
-        title: data.title,
-        description: data.description,
-        uid: auth.currentUser.uid
-      })
-      setBlogs([...blogs])
-      console.log(response);
+        uid: auth.currentUser.uid,
+        imageUrl: imageUrl, // Save image URL with blog data
+      }, 'blogs');
 
+      // Update blogs state with the new blog entry
+      setBlogs(prevBlogs => [
+        ...prevBlogs,
+        {
+          title: data.title,
+          description: data.description,
+          uid: auth.currentUser.uid,
+          imageUrl: imageUrl,
+        }
+      ]);
+      
+      console.log(response);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
+
+  const handleImageChange = (e) => {
+    setSelectedImage(e.target.files[0]); // Get the selected file
+  };
 
   return (
     <div style={styles.container}>
@@ -66,6 +74,13 @@ const Dashboard = () => {
         />
         {errors.description && <span style={styles.error}>This field is required</span>}
         <br />
+        <input 
+          type="file" 
+          accept="image/*" 
+          onChange={handleImageChange} 
+          style={styles.fileInput} 
+        />
+        <br />
         <button type='submit' style={styles.button}>Add Blog</button>
       </form>
 
@@ -75,12 +90,13 @@ const Dashboard = () => {
           <div key={index} style={styles.card}>
             <h2 style={styles.cardTitle}>{item.title}</h2>
             <p style={styles.cardDescription}>{item.description}</p>
+            {item.imageUrl && <img src={item.imageUrl} alt="Blog" style={styles.blogImage} />} {/* Display the image */}
           </div>
         )) : <h2 style={styles.noBlogs}>No blogs found</h2>}
       </div>
     </div>
-  )
-}
+  );
+};
 
 const styles = {
   container: {
@@ -117,6 +133,9 @@ const styles = {
     fontSize: "16px",
     resize: "none"
   },
+  fileInput: {
+    margin: "10px 0",
+  },
   button: {
     padding: "10px 20px",
     backgroundColor: "#28a745",
@@ -146,6 +165,12 @@ const styles = {
     color: "#666",
     marginTop: "10px"
   },
+  blogImage: {
+    width: "100%",
+    height: "auto",
+    borderRadius: "5px",
+    marginTop: "10px",
+  },
   noBlogs: {
     textAlign: "center",
     color: "#999",
@@ -155,6 +180,6 @@ const styles = {
     color: "red",
     fontSize: "0.9em"
   }
-}
+};
 
-export default Dashboard
+export default Dashboard;

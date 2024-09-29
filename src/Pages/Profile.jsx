@@ -1,34 +1,45 @@
-
-import React, { useEffect, useState } from 'react'
-import { auth, getData } from '../firebaseconfig/firebasemethod'
-import { onAuthStateChanged } from 'firebase/auth'
+import React, { useEffect, useState } from 'react';
+import { auth, getData } from '../firebaseconfig/firebasemethod';
+import { onAuthStateChanged } from 'firebase/auth';
+import { getDownloadURL, ref, getStorage } from 'firebase/storage'; // Import getStorage
 
 const Profile = () => {
-  const [user, setUser] = useState(null)
-  const [blogs, setBlogs] = useState([])
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [profileImageUrl, setProfileImageUrl] = useState('');
+  const storage = getStorage(); // Initialize storage
 
   useEffect(() => {
     // Check if user is logged in and get their data
-    onAuthStateChanged(auth, async (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
+        // Set user data
         setUser({
           email: currentUser.email,
           displayName: currentUser.displayName,
-          profileImageUrl: currentUser.photoURL,
-        })
-        
-        // Fetch blogs data for this user
-        const userBlogs = await getData('blogs', currentUser.uid)
-        setBlogs(userBlogs)
-      } else {
-        // Handle the case when user is not logged in (optional)
-        console.log("No user is signed in.")
-      }
-    })
-  }, [])
+          uid: currentUser.uid,
+        });
 
-  if (!user) {
-    return <h1 style={styles.noUser}>Loading profile...</h1>
+        // Get the profile image URL from Firebase Storage
+        const imageRef = ref(storage, `profileImages/${currentUser.uid}`); // Adjust the path as needed
+        try {
+          const url = await getDownloadURL(imageRef);
+          setProfileImageUrl(url);
+        } catch (error) {
+          console.error("Error fetching profile image: ", error);
+        }
+      } else {
+        console.log("No user is signed in.");
+      }
+      setLoading(false); // Set loading to false once user data is fetched
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [storage]);
+
+  if (loading) {
+    return <h1 style={styles.noUser}>Loading profile...</h1>;
   }
 
   return (
@@ -36,29 +47,15 @@ const Profile = () => {
       <h1 style={styles.header}>Profile</h1>
 
       <div style={styles.profileContainer}>
-        {user.profileImageUrl && (
-          <img src={user.profileImageUrl} alt="Profile" style={styles.profileImage} />
+        {profileImageUrl && (
+          <img src={profileImageUrl} alt="Profile" style={styles.profileImage} />
         )}
         <h2 style={styles.name}>{user.displayName || "User"}</h2>
         <p style={styles.email}>{user.email}</p>
       </div>
-
-      <h1 style={styles.header}>My Blogs</h1>
-      <div style={styles.blogContainer}>
-        {blogs.length > 0 ? (
-          blogs.map((blog, index) => (
-            <div key={index} style={styles.card}>
-              <h2 style={styles.cardTitle}>{blog.title}</h2>
-              <p style={styles.cardDescription}>{blog.description}</p>
-            </div>
-          ))
-        ) : (
-          <h2 style={styles.noBlogs}>No blogs found</h2>
-        )}
-      </div>
     </div>
-  )
-}
+  );
+};
 
 const styles = {
   container: {
@@ -95,35 +92,11 @@ const styles = {
     color: "#666",
     marginBottom: "10px",
   },
-  blogContainer: {
-    marginTop: "20px",
-  },
-  card: {
-    backgroundColor: "#fff",
-    padding: "20px",
-    margin: "20px 0",
-    borderRadius: "10px",
-    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-  },
-  cardTitle: {
-    fontSize: "1.5em",
-    color: "#333",
-  },
-  cardDescription: {
-    fontSize: "1em",
-    color: "#666",
-    marginTop: "10px",
-  },
-  noBlogs: {
-    textAlign: "center",
-    color: "#999",
-    fontSize: "1.2em",
-  },
   noUser: {
     textAlign: "center",
     color: "#666",
     fontSize: "1.5em",
   },
-}
+};
 
-export default Profile
+export default Profile;
