@@ -87,7 +87,7 @@ const Dashboard = () => {
       <h1 style={styles.header}>User Blogs</h1>
       <div style={styles.blogContainer}>
         {blogs.length > 0 ? blogs.map((item, index) => (
-          <div key={index} style={styles.card}>
+          <div key={item.id} style={styles.card}>
             <h2 style={styles.cardTitle}>{item.title}</h2>
             <p style={styles.cardDescription}>{item.description}</p>
             {item.imageUrl && <img src={item.imageUrl} alt="Blog" style={styles.blogImage} />} {/* Display the image */}

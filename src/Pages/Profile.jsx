@@ -42,9 +42,9 @@ const Profile = () => {
       <h1 style={styles.header}>Profile</h1>
 
       <div style={styles.profileContainer}>
-        {profileData.profileImageUrl && (
+        {profileData.profileImageUrl ? (
           <img src={profileData.profileImageUrl} alt="Profile" style={styles.profileImage} />
-        )}
+        ):(<h2>hwllo</h2>)}
         <h2 style={styles.name}>{profileData.displayName || 'User'}</h2>
         <p style={styles.email}>{profileData.email || user.email}</p>
        

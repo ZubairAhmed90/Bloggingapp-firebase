@@ -1,12 +1,13 @@
 // ErrorPage.jsx
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const ErrorPage = () => {
   return (
     <div style={styles.container}>
       <h1 style={styles.header}>404 Not Found</h1>
       <p style={styles.message}>Oops! The page you're looking for doesn't exist.</p>
-      <a href="/" style={styles.link}>Go back to Home</a>
+      <Link href="/" style={styles.link}>Go back to Home</Link>
     </div>
   );
 };

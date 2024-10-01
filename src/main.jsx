@@ -1,29 +1,27 @@
 import { createRoot } from 'react-dom/client';
-import App from './App.jsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from './Layout.jsx';
-import Login from './pages/Login.jsx';
-import Dashboard from './pages/Dashboard.jsx';
-import SingleUser from './pages/SingleUser.jsx';
-import Profile from './pages/profile.jsx';
-import Register from './pages/Register.jsx';
-import Home from './pages/Home.jsx';
+import Login from './Pages/Login.jsx';
+import Dashboard from './Pages/Dashboard.jsx'
+import SingleUser from './Pages/SingleUser.jsx';
+import Profile from './Pages/Profile.jsx';  // Capitalized "Profile" to keep consistency
+import Register from './Pages/Register.jsx';
+import Home from './Pages/Home.jsx';
 import ProtectedRoutes from './components/ProtectedRoutes.jsx';
 import BlogDetails from './Pages/BlogDetails.jsx';
-import ErrorPage from './Pages/errrorpage.jsx'; 
+import ErrorPage from './Pages/errrorpage.jsx'; // Capitalized "ErrorPage" for consistency
 
 const router = createBrowserRouter([
   {
     path: '',
     element: <Layout />,
-    errorElement: <ErrorPage />, 
     children: [
       {
-        path: '',
+        path: '/',
         element: <Home />,
       },
       {
-        path: 'BlogDetails/:id',
+        path: 'blogdetails/:id',
         element: <BlogDetails />,
       },
       {
@@ -48,10 +46,12 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: '*',
+    element: <ErrorPage />,
+  },
 ]);
 
 createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router}>
-    <App />
-  </RouterProvider>
+  <RouterProvider router={router} />
 );

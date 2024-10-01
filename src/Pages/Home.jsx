@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link, Outlet } from 'react-router-dom'; 
 import Card from '../components/Card'; 
 import { auth, getData } from '../firebaseconfig/firebasemethod'; 
 import { onAuthStateChanged } from 'firebase/auth';
@@ -7,7 +7,6 @@ import { onAuthStateChanged } from 'firebase/auth';
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
 
-  
   const dummyBlogs = [
     {
       id: '1',
@@ -34,7 +33,7 @@ const Home = () => {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
           const blogsData = await getData("blogs", user.uid); // Fetch blogs for the current user
-          setBlogs(blogsData.length > 0 ? blogsData : dummyBlogs); // Set blogs state with fetched data or use dummy data
+          setBlogs(blogsData.length > 0 ? [...blogsData] : [...dummyBlogs]); // Set blogs state with fetched data or use dummy data
         } else {
           setBlogs(dummyBlogs); // If no user is authenticated, show dummy blogs
         }
@@ -50,18 +49,20 @@ const Home = () => {
       <div style={styles.blogContainer}>
         {blogs.length > 0 ? (
           blogs.map((blog) => (
-            <Link to={`/BlogDetails/${blog.id}`} key={blog.id} style={{ textDecoration: 'none' }}>
-              <Card
-                title={blog.title}
-                description={blog.description}
-                imageUrl={blog.imageUrl}
-              />
-            </Link>
+            <div key={blog.id}>
+              <Link to={`/blogdetails/${blog.id}`} style={{ textDecoration: 'none' }}>
+                <Card
+                  title={blog.title}
+                  description={blog.description}
+                  imageUrl={blog.imageUrl}
+                />
+              </Link>
+            </div>
           ))
         ) : (
           <h2 style={styles.noBlogs}>No blogs found</h2>
         )}
-      </div>
+      </div><Outlet/>
     </div>
   );
 };
